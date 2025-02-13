@@ -17,10 +17,12 @@ public class SecurityConfig {
             .authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/clientes/**").hasAnyAuthority("ADMIN")
                 .requestMatchers("/user/**").hasRole("USER")
-                .requestMatchers("/**").permitAll()
+                .requestMatchers("/public/**").permitAll()
                 .anyRequest().authenticated()
             )
+            .sessionManagement(sess -> sess.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
             .csrf((csrf) -> csrf
                     .ignoringRequestMatchers("/auth/login")
             );
